@@ -1,16 +1,14 @@
-import unittest
-
-import pytest
-
-from pyramid import testing
+from dfsocial.tests import BaseTestCase
 
 
-class TestDFSocial(unittest.TestCase):
+class TestDFSocial(BaseTestCase):
     def test_main_returns_wsgi_app(self):
-        from dfsocial import main
-        from paste.deploy.loadwsgi import appconfig
         from pyramid.router import Router
-        settings = appconfig('config:test.ini', relative_to="./")
+        from paste.deploy.loadwsgi import appconfig
+
+        from dfsocial import main
+
+        settings = appconfig('config:test.ini', relative_to='./')
         wsgi_ = main({}, **settings)
 
         assert isinstance(wsgi_, Router)

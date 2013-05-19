@@ -1,15 +1,16 @@
 import os
 import sys
 
-from xml.etree import ElementTree
 
 from sqlalchemy import engine_from_config
 
-from pyramid.paster import get_appsettings
 from pyramid.paster import setup_logging
+from pyramid.paster import get_appsettings
 
 from ..models.models import DBSession
 from ..models.models import Base
+
+#s = codecs.open('/share/region6-legends.xml', errors='ignore', encoding='utf-8').read()
 
 
 def load_legends_xml(filename):
@@ -18,7 +19,7 @@ def load_legends_xml(filename):
     Returns the contents of the file as a string.
     """
 
-    #TODO not rely on hardcoded dfsocial
+    #TODO not rely on hardcoded dfsocial or cwd
     filepath = os.path.join(os.getcwd(), "dfsocial", "data", filename)
 
     try:

@@ -1,25 +1,15 @@
-import unittest
-
-from pyramid import testing
-
-from ..models.models import DBSession
+from dfsocial.tests import BaseTestCase
 
 
-class TestHistoricalFigureModel(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
+class TestHistoricalFigureModel(BaseTestCase):
     def test_historical_figure_has_df_id(self):
-        from ..models.models import HistoricalFigure
+        from dfsocial.models.models import HistoricalFigure
         hf = HistoricalFigure()
         assert(hasattr(hf, "df_id"))
 
 
-class TestSkillModel(unittest.TestCase):
+class TestSkillModel(BaseTestCase):
     def test_skill_has_name(self):
-        from ..models.models import Skill
+        from dfsocial.models.models import Skill
         s = Skill()
         assert(hasattr(s, "text"))
