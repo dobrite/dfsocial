@@ -1,6 +1,5 @@
 import os
 import sys
-import transaction
 
 from xml.etree import ElementTree
 

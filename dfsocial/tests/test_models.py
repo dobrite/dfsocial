@@ -1,5 +1,4 @@
 import unittest
-import transaction
 
 from pyramid import testing
 
@@ -23,4 +22,4 @@ class TestSkillModel(unittest.TestCase):
     def test_skill_has_name(self):
         from ..models.models import Skill
         s = Skill()
-        assert(hasattr(s, "name"))
+        assert(hasattr(s, "text"))

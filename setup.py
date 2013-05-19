@@ -34,6 +34,15 @@ requires = [
     'psycopg2',
 ]
 
+tests_requires = [
+    'pytest',
+    'mock',
+    'webtest',
+    'pytest-cov',
+    'pytest-xdist',
+    'pytest-cache',
+]
+
 setup(
     name='dfsocial',
     version='0.0',
@@ -54,12 +63,12 @@ setup(
     zip_safe=False,
     test_suite='dfsocial',
     install_requires=requires,
+    tests_requires=tests_requires,
+    cmdclass={'test': PyTest},
     entry_points="""\
     [paste.app_factory]
     main = dfsocial:main
     [console_scripts]
     initialize_dfsocial_db = dfsocial.scripts.initializedb:main
-    """,
-    tests_require=['pytest', 'mock', 'webtest', 'pytest-cov'],
-    cmdclass={'test': PyTest},
+    """
 )

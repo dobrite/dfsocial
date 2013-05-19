@@ -1,5 +1,6 @@
 import unittest
-import transaction
+
+import pytest
 
 from pyramid import testing
 
@@ -52,27 +53,35 @@ hf = """
 """
 
 
-def create_historical_figure():
-    pass
-
-
 class TestInitializeDB(unittest.TestCase):
     def setUp(self):
         pass
 
-    def load_xml(self):
-        from ..scripts.initializedb import load_legends_xml
-        return load_legends_xml('region1-legends.xml')
+    # def load_xml(self):
+    #     from ..scripts.initializedb import load_legends_xml
+    #     return load_legends_xml('region1-legends.xml')
+
+    def test_usage(self):
+        from ..scripts.initializedb import usage
+        with pytest.raises(SystemExit):
+            usage(["", ""])
+
+    def test_main_calls_usage(self):
+        from ..scripts.initializedb import main
+        with pytest.raises(SystemExit):
+            main(argv=["", "", ""])
+
+    def test_main_creates_tables(self):
+        from ..scripts.initializedb import main
+        main(argv=["", "test.ini"])
 
     def test_load_legends_xml_for_invalid_filename(self):
         from ..scripts.initializedb import load_legends_xml
-        with assert_raises(IOError) as e:
+        with pytest.raises(IOError) as e:
             load_legends_xml('invalid.xml')
-
-        assert_equal(e.exception.message, "Invalid Legends File or Filename")
 
     def test_load_legends_xml_returns_string(self):
         from ..scripts.initializedb import load_legends_xml
         xml_ = load_legends_xml('region1-legends.xml')
-        assert_is_instance(xml_, str)
 
+        assert isinstance(xml_, str)
