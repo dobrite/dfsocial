@@ -39,3 +39,6 @@ production.ini
 .cache*
 temp*
 test*
+
+*.swp
+.ropeproject*

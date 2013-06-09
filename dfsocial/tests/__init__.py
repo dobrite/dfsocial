@@ -2,8 +2,8 @@ import unittest
 
 from pyramid import testing
 
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import engine_from_config
+from sqlalchemy.orm import sessionmaker
 
 from paste.deploy.loadwsgi import appconfig
 

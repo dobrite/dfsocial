@@ -26,6 +26,5 @@ class TestInitializeDB(BaseTestCase):
     def test_load_legends_xml_returns_string(self):
         from ..scripts.initializedb import load_legends_xml
         xml_ = load_legends_xml('region1-legends.xml')
-        print "YARRR"
 
         assert isinstance(xml_, str)

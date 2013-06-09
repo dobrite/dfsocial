@@ -5,6 +5,7 @@ from sqlalchemy import Table
 from sqlalchemy import ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.associationproxy import association_proxy
 
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
@@ -30,36 +31,78 @@ historical_figures_spheres = Table(
 )
 
 
+class ReprMixin(object):
+    def __repr__(self):
+        def reprs():
+            for col in self.__table__.c:
+                yield col.name, repr(getattr(self, col.name))
+
+        def format(seq):
+            for key, value in seq:
+                yield '%s=%s' % (key, value)
+
+        args = '(%s)' % ', '.join(format(reprs()))
+        classy = type(self).__name__
+        return classy + args
+
+
+class Region(ReprMixin, Base):
+    __tablename__ = 'regions'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(length=50), nullable=False)
+    region_type = relationship("RegionType", backref="all_regions")
+    region_type_id = Column(Integer, ForeignKey('region_types.id'))
+
+    type = association_proxy('region_type', 'text')
+
+
+class RegionType(Base):
+    __tablename__ = 'region_types'
+    id = Column(Integer, primary_key=True)
+    text = Column(String(length=50), nullable=False)
+
+    regions = association_proxy('all_regions', 'name')
+
+
+class UndergroundRegion(ReprMixin, Base):
+    __tablename__ = 'underground_regions'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(length=50), nullable=False)
+    depth = Column(Integer, nullable=False)
+
+    underground_region_type = relationship(
+        "UndergroundRegionType",
+        backref="all_underground_regions",
+    )
+    underground_region_type_id = Column(
+        Integer,
+        ForeignKey('underground_region_types.id'),
+    )
+
+    type = association_proxy('underground_region_type', 'text')
+
+
+class UndergroundRegionType(Base):
+    __tablename__ = 'underground_region_types'
+    id = Column(Integer, primary_key=True)
+    text = Column(String(length=50), nullable=False)
+
+    underground_regions = association_proxy(
+        'all_undergournd_regions',
+        'name',
+    )
+
+
 class HistoricalFigure(Base):
     __tablename__ = 'historical_figures'
     id = Column(Integer, primary_key=True)
-    df_id = Column(Integer, nullable=False)
+    hf_id = Column(Integer, nullable=False)
     name = Column(String(length=50), nullable=False, unique=True)
 
     race = relationship('Race')
     caste = relationship('Caste')
     associated_type = relationship('AssociatedType')
 
-    # 'appeared',
-    # 'associated_type',
-    # 'birth_seconds72',
-    # 'birth_year',
-    # 'caste',
-    # 'death_seconds72',
-    # 'death_year',
-    # 'deity',
-    # 'ent_pop_id',
-    # 'entity_former_position_link',
-    # 'entity_link',
-    # 'entity_position_link',
-    # 'hf_link',
-    # 'hf_skill',
-    # 'id',
-    # 'interaction_knowledge',
-    # 'name',
-    # 'race',
-    # 'site_link',
-    # 'sphere' m-m
 
     skills = relationship(
         'Skill',
@@ -73,7 +116,7 @@ class HistoricalFigure(Base):
         backref='historical_figures',
     )
 
-    def __init__(self, df_id, name, race, caste, skills, spheres):
+    def __init__(self, hf_id, name, race, caste, skills, spheres):
         pass
 
 
