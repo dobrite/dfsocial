@@ -3,7 +3,7 @@ from lxml import etree
 
 
 def load_xml():
-    filename = '/share/region5-legends.xml'
+    filename = '/share/region3-legends.xml'
     xml_ = codecs.open(filename, errors='ignore', encoding='utf-8')
     root = etree.parse(xml_)
 
@@ -28,22 +28,21 @@ def tags(root, path):
 
 
 def line(root, path, tag, depth):
-    num = int(root.xpath("count(//" + path + "/" + tag + ")"))
-    tc = str(tag_counts(root, path, tag)) if num > 1 else ""
-    print "{}{} {} {}".format(depth * "  ", tag, num, tc)
+    xpath = "count(//{path}/{tag})".format(path=path, tag=tag)
+    num = int(root.xpath(xpath))
+    tcs = str(tag_counts(root, path, tag)) if num > 1 else ""
+    print "{ws}{tag} {num} {tcs}".format(ws=depth * "  ", tag=tag, num=num, tc=tc)
 
 
-def print_tags(root, path=".", depth=0):
+def print_tags(root):
     output = []
 
-    def loop(path, depth):
+    def loop(path=".", depth=0):
         for tag in tags(root, path):
             output.append(line(root, path, tag, depth))
-            depth += 1
-            loop(path + "/" + tag, depth)
-            depth -= 1
+            loop("{path}/{tag}".format(path=path, tag=tag), depth+1)
 
-    loop(path, depth)
+    loop()
     return output
 
 
