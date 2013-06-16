@@ -31,7 +31,7 @@ def line(root, path, tag, depth):
     xpath = "count(//{path}/{tag})".format(path=path, tag=tag)
     num = int(root.xpath(xpath))
     tcs = str(tag_counts(root, path, tag)) if num > 1 else ""
-    print "{ws}{tag} {num} {tcs}".format(ws=depth * "  ", tag=tag, num=num, tc=tc)
+    print "{ws}{tag} {num} {tcs}".format(ws=depth * "  ", tag=tag, num=num, tcs=tcs)
 
 
 def print_tags(root):
