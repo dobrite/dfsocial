@@ -3,11 +3,21 @@ from lxml import etree
 
 
 def load_xml():
-    filename = '/share/region3-legends.xml'
+    filename = '/share/region5-legends.xml'
     xml_ = codecs.open(filename, errors='ignore', encoding='utf-8')
     root = etree.parse(xml_)
 
     return root
+
+
+def unique_tag_text(root, path):
+    """'//sites/site/type'"""
+
+    return set([elem.text for elem in root.xpath(path)])
+
+
+def tag_text_max_length(root, path):
+    return max(len(text) for text in unique_tag_text(root, path))
 
 
 def tag_count(root, path, tag, i):
