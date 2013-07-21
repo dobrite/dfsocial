@@ -73,8 +73,10 @@ class Artifact(ReprMixin, Base):
 
 class Site(ReprMixin, Base):
     __tablename__ = 'sites'
+
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(length=100), nullable=False, unique=True)
+    site_type_id = Column(Integer, ForeignKey('site_types.id'))
     site_type = relationship('SiteType', backref="all_sites")
     coords = Column(postgresql.ARRAY(Integer), nullable=False)
     structures = Column(Boolean, nullable=True)
@@ -107,6 +109,7 @@ class EntityPopulation:
 
 class HistoricalEvent(ReprMixin, Base):
     __tablename__ = 'historical_events'
+    id = Column(Integer, primary_key=True)
 
 
 class Region(ReprMixin, Base):
@@ -115,7 +118,6 @@ class Region(ReprMixin, Base):
     name = Column(Unicode(length=100), nullable=False)
     region_type = relationship("RegionType", backref="all_regions")
     region_type_id = Column(Integer, ForeignKey('region_types.id'))
-
     type = association_proxy('region_type', 'text')
 
 
@@ -137,6 +139,7 @@ class UndergroundRegion(ReprMixin, Base):
         "UndergroundRegionType",
         backref="all_underground_regions",
     )
+
     underground_region_type_id = Column(
         Integer,
         ForeignKey('underground_region_types.id'),
@@ -156,22 +159,40 @@ class UndergroundRegionType(Base):
     )
 
 
-class HistoricalFigureLinkType(ReprMixin, Base):
-    __tablename__ = 'historical_figure_link_types'
-    id = Column(Integer, primary_key=True)
-    historical_figure_link_type = relationship(
-        'HistoricalFigureLinkType',
-        backref="all_historical_figure_types"
-    )
-
-
 class HistoricalFigureLink(ReprMixin, Base):
     __tablename__ = 'historical_figure_links'
 
     id = Column(Integer, primary_key=True)
     hf_id = Column(Integer, ForeignKey('historical_figures.id'))
     link_strength = Column(Integer, nullable=True)
-    #link_type = Column(
+
+    historical_figure_link_type_id = Column(
+        Integer,
+        ForeignKey('historical_figure_link_types.id')
+    )
+
+    historical_figure_link_type = relationship(
+        'HistoricalFigureLinkType',
+        backref="all_historical_figure_types"
+    )
+
+
+class HistoricalFigureLinkType(ReprMixin, Base):
+    __tablename__ = 'historical_figure_link_types'
+
+    id = Column(Integer, primary_key=True)
+    text = Column(Unicode(length=50), nullable=False)
+
+    historical_figure_links = association_proxy(
+        'all_historical_figure_types',
+        'hf_id'
+    )
+
+
+class EntityReputation(ReprMixin, Base):
+    __tablename__ = 'entity_reputations'
+
+    id = Column(Integer, primary_key=True)
 
 
 class HistoricalFigure(Base):
@@ -189,10 +210,7 @@ class HistoricalFigure(Base):
     death_seconds = Column(Integer, nullable=False)
 
     associated_type = relationship('AssociatedType')
-    #hf_link 0-10
-    #  hfid 1
-    #  link_strength 0 or 1
-    #  link_type 1
+    hf_link = relationship('HistoricalFigureLink')
     #entity_reputation 0-10
     # first_ageless_season_count 0 or 1
     # entity_id 1

@@ -35,7 +35,7 @@ requires = [
     'lxml',
 ]
 
-tests_requires = [
+tests_require = [
     'pytest',
     'mock',
     'webtest',
@@ -64,7 +64,7 @@ setup(
     zip_safe=False,
     test_suite='dfsocial',
     install_requires=requires,
-    tests_requires=tests_requires,
+    tests_require=tests_require,
     cmdclass={'test': PyTest},
     entry_points="""\
     [paste.app_factory]
